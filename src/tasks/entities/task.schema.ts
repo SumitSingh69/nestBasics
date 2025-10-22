@@ -3,7 +3,7 @@ import {Document} from 'mongoose';
 
 @Schema({timestamps: true})
 export class Task extends Document {
-    @Prop({required: true})
+    @Prop({required: true, maxlength: 30})
     title : string;
 
     @Prop({maxlength: 500})

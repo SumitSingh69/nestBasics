@@ -13,8 +13,8 @@ export class tasksService {
     return newTask.save();
   }
 
-  async getTasks(): Promise<Task[]> {
-    return this.taskModel.find();
+  async getTasks(page: number, limit:number): Promise<Task[]> {
+    return this.taskModel.find().skip((page - 1) * limit).limit(limit);
   }
 
   async deleteTask(id: string): Promise<Task> {
@@ -34,5 +34,14 @@ export class tasksService {
   }
   getHello(): string {
     return 'Hello Sumit! from tasks';
+  }
+
+  async getTaskById(id: string): Promise<Task> {
+    const task = await this.taskModel.findById(id);
+    if(!task){
+        throw Error('Invalid id');
+    }
+    return task;
+
   }
 }

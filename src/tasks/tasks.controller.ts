@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Delete, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, Patch, Query } from '@nestjs/common';
 import {tasksService} from "./tasks.service";
 import { Task } from './entities/task.schema';
 import { createTaskDto } from './create-task.dto';
 
+
+// getTask by Id
+// pagination
 @Controller('/tasks')
 export class tasksController {
   constructor(private readonly tasksService: tasksService) {}
@@ -24,9 +27,9 @@ export class tasksController {
   }
 
   @Get('/getAll') 
-  async getTasks() {
+  async getTasks(@Query('page') page: number = 1, @Query('limit') limit: number = 4) {
     try{
-        const tasks = await this.tasksService.getTasks();
+        const tasks = await this.tasksService.getTasks(page, limit);
         return {
             message: 'Tasks retrieved successfully',
             tasks,
@@ -66,6 +69,22 @@ export class tasksController {
     }catch(error){
         return {
             message: 'Error updating task',
+            error: error.message,
+        }
+    }
+  }
+
+  @Get('/get/:id')
+  async getTaskById(@Param('id') id: string) {
+    try{
+        const task = await this.tasksService.getTaskById(id);
+        return {
+            message: 'Task retrieved successfully',
+            task,
+        }
+    }catch(error){
+        return {
+            message: 'Error retrieving task',
             error: error.message,
         }
     }
