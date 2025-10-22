@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, Patch } from '@nestjs/common';
 import {tasksService} from "./tasks.service";
 import { Task } from './entities/task.schema';
 import { createTaskDto } from './create-task.dto';
@@ -50,6 +50,22 @@ export class tasksController {
     }catch(error){
         return {
             message: 'Error deleting task',
+            error: error.message,
+        }
+    }
+  }
+
+  @Patch('/update/:id')
+  async updateTask(@Param('id') id: string, @Body() updateTaskDto: createTaskDto) {
+    try{
+        const result = await this.tasksService.updateTask(id, updateTaskDto);
+        return {
+            message: 'Task updated successfully',
+            result,
+        }
+    }catch(error){
+        return {
+            message: 'Error updating task',
             error: error.message,
         }
     }

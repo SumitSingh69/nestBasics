@@ -24,6 +24,14 @@ export class tasksService {
     }
     return deletedTask;
   }
+
+  async updateTask(id:string, updateTaskDto : createTaskDto): Promise<Task> {
+    const data = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, { new: true });
+    if(!data){
+        throw Error('Task not found');
+    }
+    return data;
+  }
   getHello(): string {
     return 'Hello Sumit! from tasks';
   }
