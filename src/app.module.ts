@@ -10,7 +10,7 @@ dotenv.config();
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // so you don't need to import it in other modules
+      isGlobal: true,
     }),
     // Connect to MongoDB
     MongooseModule.forRoot(process.env.MONGO_URI!),
