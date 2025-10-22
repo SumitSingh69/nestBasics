@@ -1,25 +1,22 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import databaseConfig from './config/database.config';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { TasksModule } from './tasks/tasks.module';
+import { ConfigModule } from '@nestjs/config';
 
+import dotenv from 'dotenv';
+dotenv.config();
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-      load: [databaseConfig],
-      expandVariables: true,
+      isGlobal: true, // so you don't need to import it in other modules
     }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('database.uri'),
-      }),
-    }),
+    // Connect to MongoDB
+    MongooseModule.forRoot(process.env.MONGO_URI!),
+
+    // Import your TasksModule
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
